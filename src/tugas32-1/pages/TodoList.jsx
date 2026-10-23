@@ -1,0 +1,56 @@
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { TodoContext } from '../context/TodoContext';
+import { VoteContext } from '../context/VoteContext';
+
+function TodoList() {
+    // Value di return tadi kita panggil disini
+    const { todos, users, selectedUser, setSelectedUser } = useContext(TodoContext);
+    const { votes, handleVote } = useContext(VoteContext);
+
+    return (
+        <div>
+            <center>
+                <h1>Aplikasi Todo List & Voting</h1>
+                <p>React Context</p>
+            </center>
+
+            {/* Select input untuk memilih user */}
+            <div className='container'>
+                <label><strong>User saat ini: </strong></label>
+                <select value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
+                    {users.map((user, index) => (
+                        <option key={index} value={user}>{user}</option>
+                    ))}
+                </select>
+
+                <p>Halo, <b>{selectedUser}</b>! Silahkan berikan vote atau lihat detail todo list di bawah ini. </p>
+            </div>
+
+            {/* List Todo */}
+            <h3>Daftar Todo</h3>
+            <ul>
+                {todos.map((todo) => (
+                    <li key={todo.id} className='list'>
+                        {/* Klik Judul untuk pindah ke halaman Detail Todo */}
+                        <Link to={`/todo/${todo.id}`} className='link'>
+                            {todo.title}
+                        </Link>
+
+                        <p>Jumlah Vote: <b>{votes[todo.id] || 0}</b></p>
+
+                        {/* Tombol Vote */}
+                        <button onClick={() => handleVote(todo.id)}>Vote</button>
+
+                        {/* Tombol Link ke Detail List */}
+                        <Link to={`/todo/${todo.id}`}>
+                            <button>Lihat Detail</button>
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+export default TodoList;
